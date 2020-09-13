@@ -38,9 +38,17 @@ RUN pip3 install --upgrade pip && \
     pip3 install --upgrade "jupyterlab" && \
     pip3 install https://storage.googleapis.com/ml-pipeline/release/latest/kfp.tar.gz --upgrade
 
+# Install krb5 and CERN config
+COPY docker/jupyterlab/krb5.conf /etc/krb5.conf
+
+# Install kale using pip from local code
 ADD . /kale
 WORKDIR /kale/backend
 RUN pip3 install -U .
+
+# Install other pip requirements
+COPY docker/jupyterlab/requirements.txt /requirements.txt
+RUN pip3 install -r /requirements.txt
 
 WORKDIR /kale/labextension
 RUN jlpm install && \
