@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import os
+
 import kfp
 from kfp_server_api.rest import ApiException
 
@@ -23,8 +25,10 @@ _client = None
 def _get_client(host=None):
     global _client
 
+    nbprefix = os.environ['NB_PREFIX']
     if _client is None:
         _client = kfp.Client()
+        _client.set_user_namespace(nbprefix.split('/')[-2])
 
     return _client
 
